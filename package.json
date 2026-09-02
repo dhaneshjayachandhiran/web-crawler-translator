@@ -1,0 +1,13 @@
+{
+  "name": "localization-tool",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && pip install -r requirements.txt && uvicorn main:app --reload --port 8000",
+    "install:all": "npm install && cd frontend && npm install"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}
