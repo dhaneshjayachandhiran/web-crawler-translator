@@ -3,9 +3,11 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "dev": "cd frontend && npm run dev",
     "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "cd backend && pip install -r requirements.txt && uvicorn main:app --reload --port 8000",
-    "install:all": "npm install && cd frontend && npm install"
+    "install:all": "npm install && cd frontend && npm install",
+    "typecheck": "cd frontend && npx tsc --noEmit"
   },
   "devDependencies": {
     "typescript": "^5.4.5"
