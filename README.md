@@ -31,6 +31,12 @@ A comprehensive, browser-first website localization platform. This tool allows u
 
 ## 🧠 Architecture & Strategy
 
+- **Frontend**: React + Vite + Tailwind CSS (port 3000)
+- **Backend**: FastAPI + SQLAlchemy + SQLite (port 8000)
+- **Crawler**: BeautifulSoup (primary) + Playwright (fallback)
+- **Translation Memory**: SHA256-based deduplication
+- **Publishing**: Vanilla JavaScript `loc.js` with floating language switcher
+
 ### DOM-Matching Strategy (Publish Snippet)
 
 The publish snippet utilizes **exact text-content matching** on isolated text nodes. Instead of using regex on raw `innerHTML` (which risks destroying injected data attributes, inline styles, or React/Vue event listeners), the script recursively traverses the DOM tree. When it finds a text node (`node.nodeType === 3`), it trims whitespace and looks up the exact string in a fetched JSON translation map. If a match is found, it directly updates `node.textContent`, leaving the surrounding HTML structure flawlessly intact.
@@ -99,6 +105,14 @@ uvicorn main:app --reload --port 42101
 ```
 
 The backend API will be available at `http://localhost:42101`.
+
+## API Endpoints
+- `POST /crawl` - Start crawling a project
+- `GET /pages` - List all pages
+- `PATCH /api/pages/{id}` - Toggle page inclusion
+- `POST /api/projects/{id}/translate` - Batch translate
+- `POST /api/segments/{id}/translate` - Translate single segment
+- `GET /cdn/loc.js` - Get publishing snippet
 
 ## 🗺️ User Flow
 
