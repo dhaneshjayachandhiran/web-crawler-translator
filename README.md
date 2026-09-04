@@ -29,6 +29,16 @@ A comprehensive, browser-first website localization platform. This tool allows u
 * **Translation Pipeline:** MyMemory API, Lingva API, Local Dictionary (multi-tier fallback system)
 * **Data Storage (Current):** In-memory mock database (`USE_MOCK=true`) for fast demonstration environments.
 
+## 🧠 Architecture & Strategy
+
+### DOM-Matching Strategy (Publish Snippet)
+
+The publish snippet utilizes **exact text-content matching** on isolated text nodes. Instead of using regex on raw `innerHTML` (which risks destroying injected data attributes, inline styles, or React/Vue event listeners), the script recursively traverses the DOM tree. When it finds a text node (`node.nodeType === 3`), it trims whitespace and looks up the exact string in a fetched JSON translation map. If a match is found, it directly updates `node.textContent`, leaving the surrounding HTML structure flawlessly intact.
+
+### Client-Side Rendering (CSR) Support
+
+Currently, the crawler relies on standard HTTP fetching and the browser's native `DOMParser`. Therefore, it fully supports **static HTML and SSR (Server-Side Rendered)** pages. It does *not* currently execute JavaScript during the crawl phase. To support heavy CSR/SPA applications (like standard React or Vue apps without SSR), the architecture would need to be extended with a headless browser (e.g., Puppeteer or Playwright) in the backend.
+
 ## 📂 Project Structure
 
 ```text
@@ -102,12 +112,14 @@ The backend API will be available at `http://localhost:42101`.
 
 5. **Deploy:** Click **Publish Page Snippet** to generate the JavaScript integration code.
 
-## 🔧 How the Embed Snippet Works
+## 🚧 Known Limitations & Future Improvements
 
-The generated JavaScript one-liner (`<script src=".../api/embed/1.js" defer></script>`) operates entirely on the client side:
+To transition this prototype into a production-grade system (e.g., scaling to 1,000+ pages), the following architectural improvements are mapped out:
 
-1. It reads `window.location.pathname` to identify the active page.
+1. **Persistent Storage:** Replace the current in-memory mock database (`USE_MOCK=true`) with PostgreSQL to persist projects, pages, and translations across sessions.
 
-2. It fetches the specific JSON translation map for that path.
+2. **Server-Side Crawler Engine:** Shift the crawler from the client browser to the FastAPI backend using `asyncio` and `aiohttp`. This will allow concurrent fetching, bypass CORS issues entirely, and prevent browser memory crashes on large sites.
 
-3. It recursively traverses the DOM (`node.nodeType === 3`) to match and safely replace `textContent`, ensuring HTML structure, CSS classes, and JavaScript event listeners remain perfectly intact.
+3. **Queueing & Rate Limiting:** Introduce Redis or RabbitMQ to manage URL frontiers, handle retry logic with exponential backoff, and enforce target-server rate limits and `robots.txt` compliance.
+
+4. **Translation Memory & Diffing:** Implement intelligent re-crawling that only flags changed segments, and a global translation memory database to reuse translations across different projects and pages automatically.
