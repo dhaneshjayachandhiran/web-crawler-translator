@@ -2,6 +2,10 @@
 
 A comprehensive, browser-first website localization platform. This tool allows users to crawl any target website, extract its text content, translate it into multiple languages, and deploy a lightweight JavaScript snippet to render those translations live on the original site without touching the backend infrastructure.
 
+## 🎥 Demo Video
+
+[Watch the LocTool Demo Video](https://drive.google.com/file/d/1E4hniZJhDjS05R6WTMxADQnTgNbb_FEB/view?usp=sharing)
+
 ## 🚀 Key Features
 
 * **Automated Web Crawler (BFS):** Navigates through target websites to extract meaningful text segments (headings, paragraphs, buttons, lists) while ignoring non-translatable layout elements (nav, footer).
